@@ -2,18 +2,24 @@
 
 A service that dynamically modulates the vocal characteristics of synthesized speech based on the detected emotion of the source text. This project bridges the gap between text-based sentiment and expressive, human-like audio output.
 
-## Challenge Objective
+## Project Description
 
-The Empathy Engine was built to address the "uncanny valley" problem in AI-driven voice interactions. While AI can understand and generate text with great accuracy, the voice often sounds robotic and lacks emotional nuance. This project enhances TTS systems by adding prosody, emotional range, and subtle vocal cues that build trust and rapport.
+In the world of AI-driven voice interactions, standard Text-to-Speech (TTS) systems often sound robotic and lack emotional resonance. The Empathy Engine addresses this challenge by:
+
+1. Detecting emotions in text using natural language processing
+2. Dynamically adjusting voice parameters (rate, pitch, volume) based on the detected emotion
+3. Generating more human-like speech that matches the emotional context of the text
+
+The result is synthesized speech that can sound genuinely enthusiastic about good news, patient when explaining complex ideas, or empathetic when responding to frustrations.
 
 ## Core Features
 
-1. **Text Input**: Accept text via a web interface or API endpoint
+1. **Text Input**: Accept text via a web interface or CLI
 2. **Emotion Detection**: Analyze text to detect emotions and their intensity
 3. **Voice Modulation**: Alter vocal parameters (rate, pitch, volume) based on detected emotions
 4. **Audio Output**: Generate playable audio files (.mp3, .wav)
 
-## Advanced Features
+## Features
 
 1. **Granular Emotion Detection**: Detects multiple emotional states:
    - happy, excited, sad, angry, fear, neutral, surprise, positive, negative, concerned
@@ -30,11 +36,6 @@ The Empathy Engine was built to address the "uncanny valley" problem in AI-drive
 - **Emotion Analysis**: TextBlob (basic), HuggingFace Transformers (advanced)
 - **TTS Engines**: pyttsx3, Google TTS (gTTS), ElevenLabs API
 - **Web Framework**: Flask
-- TTS Engines:
-  - pyttsx3 (offline) - Default, works without internet
-  - gTTS (Google Text-to-Speech API) - Better quality, requires internet
-  - ElevenLabs API - Premium quality with SSML support, requires API key
-- Web Interface: Flask
 
 ## Setup and Installation
 
@@ -111,41 +112,73 @@ The system maps detected emotions to specific voice parameters:
 
 Additionally, the intensity of the detected emotion (low, medium, high) further scales these modifiers.
 
-## Project Evaluation Criteria
-
-The Empathy Engine meets all core functional requirements and most bonus objectives from the challenge:
-
-### Core Requirements
-- ✅ **Text Input**: Accepts text via web interface, CLI, and API
-- ✅ **Emotion Detection**: Classifies text into multiple emotional categories
-- ✅ **Vocal Parameter Modulation**: Alters rate, pitch, and volume
-- ✅ **Emotion-to-Voice Mapping**: Clear logic maps emotions to voice parameters
-- ✅ **Audio Output**: Generates playable audio files
-
-### Bonus Objectives
-- ✅ **Granular Emotions**: Detects 10 different emotional states
-- ✅ **Intensity Scaling**: Adjusts modulation based on emotional intensity
-- ✅ **Web Interface**: Provides interactive UI with audio playback
-- ❌ **SSML Integration**: Not implemented yet but could be added in future iterations
+## Design Choices
 
 ## Design Choices
 
-The Empathy Engine was built with several key design principles in mind:
+### Emotion Detection
 
-1. **Modular Architecture**: The system is split into reusable components (emotion detection, voice modulation) that can be independently improved or replaced.
+The Empathy Engine uses a two-tier approach to emotion detection:
 
-2. **Tiered Emotion Detection**: 
-   - Basic detection uses TextBlob for sentiment analysis - fast and works offline
-   - Advanced detection uses transformer models for more nuanced emotion detection
+1. **Basic Sentiment Analysis**: Using TextBlob for fast, offline processing
+   - Analyzes polarity (positive/negative) and subjectivity
+   - Works without internet connection
+   - Suitable for simple use cases
 
-3. **Flexible TTS Engine Support**:
-   - Local engine (pyttsx3) for offline use and rapid development
-   - Cloud-based engines (gTTS, ElevenLabs) for higher quality when needed
+2. **Advanced Emotion Classification**: Using transformer models for nuanced detection
+   - Detects specific emotions beyond positive/negative
+   - Provides higher accuracy and granularity
+   - Requires internet connection for initial model download
 
-4. **Emotion-to-Voice Parameter Mapping**:
-   - Each emotion has specific parameter adjustments based on human speech patterns
-   - Intensity scaling ensures proportional voice changes based on emotional intensity
-   - Base parameters are modified by percentage rather than absolute values for consistent results
+This tiered approach allows the system to fall back to basic analysis when needed while offering rich emotion detection when available.
+
+### Emotion-to-Voice Mapping
+
+The core innovation of the Empathy Engine is its emotion-to-voice parameter mapping. Each detected emotion translates to specific voice modifications:
+
+| Emotion    | Rate    | Pitch   | Volume  | Description                          |
+|------------|---------|---------|---------|--------------------------------------|
+| happy      | +20%    | +15%    | +10%    | Faster, higher pitch, slightly louder|
+| excited    | +30%    | +20%    | +15%    | Even faster and higher               |
+| sad        | -10%    | -15%    | -10%    | Slower, lower pitch, slightly quieter|
+| angry      | +10%    | +5%     | +20%    | Slightly faster, normal pitch, louder|
+| fear       | +15%    | +10%    | -5%     | Faster, higher pitch, quieter        |
+| neutral    | +0%     | +0%     | +0%     | No modification                      |
+| surprise   | +15%    | +20%    | +15%    | Faster, higher pitch, louder         |
+| positive   | +10%    | +10%    | +5%     | Slightly faster and higher           |
+| negative   | -5%     | -5%     | -5%     | Slightly slower, lower, quieter      |
+| concerned  | -5%     | -5%     | +5%     | Slower, lower, slightly louder       |
+
+### Intensity Scaling
+
+Beyond basic emotion mapping, the Empathy Engine also scales voice modulations based on the detected intensity of emotions:
+
+- **Low intensity**: 50% of the standard parameter adjustments
+- **Medium intensity**: 100% of the standard parameter adjustments
+- **High intensity**: 150% of the standard parameter adjustments
+
+This ensures proportional voice changes that match not just the type but the strength of the emotion expressed in the text.
+
+### Multiple TTS Engine Support
+
+The system supports three TTS engines with different characteristics:
+
+1. **pyttsx3**: 
+   - Local processing, no internet required
+   - Fast execution
+   - Limited voice quality
+
+2. **Google TTS (gTTS)**:
+   - Better voice quality
+   - Requires internet connection
+   - Limited control over voice parameters
+
+3. **ElevenLabs**:
+   - Premium voice quality
+   - Advanced voice control
+   - Requires API key and internet connection
+
+This flexibility allows users to choose the appropriate balance between quality, speed, and connectivity requirements.
 
 ## Project Structure
 
