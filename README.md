@@ -89,9 +89,7 @@ Then open your browser and navigate to `http://127.0.0.1:5000`
 
 ## Web Interface
 
-![Web Interface](https://i.imgur.com/uhPifgV.png)
-
-![Empathy Engine Web Interface](https://user-images.githubusercontent.com/155593576/266920634-c0c033ee-b415-42d5-9b87-89296e34b174.png)
+![Empathy Engine Web Interface](images/empathy_engine_screenshot.png)
 
 ### Public Access with Ngrok
 
