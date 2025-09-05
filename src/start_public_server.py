@@ -10,10 +10,13 @@ import time
 import sys
 from pathlib import Path
 
-# Add parent directory to path for imports
+# Set the working directory to the project root
 parent_dir = Path(__file__).resolve().parent.parent
+os.chdir(parent_dir)
+
+# Make sure our working directory is in the path
 if parent_dir not in sys.path:
-    sys.path.append(str(parent_dir))
+    sys.path.insert(0, str(parent_dir))
 
 def start_ngrok():
     """Start ngrok tunnel and return the public URL"""
@@ -28,6 +31,7 @@ if __name__ == "__main__":
     # Start the Flask app in a separate process
     flask_process = subprocess.Popen(
         ["python", os.path.join(parent_dir, "src", "app.py")],
+        cwd=parent_dir,  # Set working directory explicitly
         stdout=subprocess.PIPE
     )
     

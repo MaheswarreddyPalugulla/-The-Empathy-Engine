@@ -14,7 +14,16 @@ parent_dir = Path(__file__).resolve().parent.parent
 if parent_dir not in sys.path:
     sys.path.append(str(parent_dir))
 
-from src.empathy_engine import EmpathyEngine
+# Set the working directory to the project root to ensure imports work correctly
+os.chdir(parent_dir)
+
+# Local import - either style should work now
+try:
+    from src.empathy_engine import EmpathyEngine
+except ImportError:
+    # Try alternate import style if the first one fails
+    sys.path.insert(0, str(parent_dir))  # Ensure project root is first in path
+    from empathy_engine import EmpathyEngine
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
