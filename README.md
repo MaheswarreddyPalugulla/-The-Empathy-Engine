@@ -87,7 +87,7 @@ python src/app.py
 ```
 Then open your browser and navigate to `http://127.0.0.1:5000`
 
-![Empathy Engine Web Interface](https://github.com/MaheswarreddyPalugulla/-The-Empathy-Engine/assets/155593576/34e06ea5-ea50-4be9-a013-c0e8e55ad858)
+![Empathy Engine Web Interface](screenshots/empathy_engine_ui.png)
 
 ### Public Access with Ngrok
 
