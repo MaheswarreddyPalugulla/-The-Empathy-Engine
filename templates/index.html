@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empathy Engine - Emotional Text-to-Speech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: #343a40;
+            font-weight: 700;
+        }
+
+        .header .tagline {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .main-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+        .emotion-badge {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .intensity-meter {
+            height: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        #loading-spinner {
+            display: none;
+        }
+
+        #emotion-details {
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .audio-container {
+            margin: 20px 0;
+        }
+
+        .emotion-detail-item {
+            margin-bottom: 8px;
+        }
+
+        /* Emotion colors */
+        .emotion-happy,
+        .emotion-excited {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .emotion-sad,
+        .emotion-negative {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .emotion-angry {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .emotion-neutral {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .emotion-surprise,
+        .emotion-positive {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .emotion-fear,
+        .emotion-concerned {
+            background-color: #6610f2;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ The Empathy Engine</h1>
+            <p class="tagline">Giving AI a Human Voice</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card main-card">
+                    <div class="card-body">
+                        <form id="text-form">
+                            <div class="mb-3">
+                                <label for="text-input" class="form-label">Enter your text:</label>
+                                <textarea class="form-control" id="text-input" rows="4"
+                                    placeholder="Type something here... (e.g., 'I'm so excited about this new technology!')"
+                                    required></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Voice type:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="voice" id="voice-male"
+                                        value="male" checked>
+                                    <label class="form-check-label" for="voice-male">
+                                        Male
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="voice" id="voice-female"
+                                        value="female">
+                                    <label class="form-check-label" for="voice-female">
+                                        Female
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">TTS Engine:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="engine" id="engine-pyttsx3"
+                                        value="pyttsx3" checked>
+                                    <label class="form-check-label" for="engine-pyttsx3">
+                                        Local (pyttsx3) - Faster, works offline
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="engine" id="engine-gtts"
+                                        value="gtts">
+                                    <label class="form-check-label" for="engine-gtts">
+                                        Google TTS - Better quality
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="engine" id="engine-elevenlabs"
+                                        value="elevenlabs">
+                                    <label class="form-check-label" for="engine-elevenlabs">
+                                        ElevenLabs - Premium quality (requires API key)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="elevenlabs-api-container" class="mb-3" style="display: none;">
+                                <label for="elevenlabs-api-key" class="form-label">ElevenLabs API Key:</label>
+                                <input type="text" class="form-control" id="elevenlabs-api-key"
+                                    placeholder="Enter your ElevenLabs API key">
+                                <div class="form-text">Your API key is only used for this session and not stored.</div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <span id="submit-text">Generate Empathetic Speech</span>
+                                    <span id="loading-spinner" class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="result-container" class="mt-4" style="display: none;">
+                            <hr>
+                            <h5>Result:</h5>
+
+                            <div class="audio-container">
+                                <audio id="audio-player" controls style="width: 100%;">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+
+                            <div class="emotion-container">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span>Detected emotion: </span>
+                                        <span id="emotion-badge" class="emotion-badge"></span>
+                                    </div>
+                                    <div>
+                                        <span>Intensity: </span>
+                                        <span id="intensity-value"></span>
+                                    </div>
+                                </div>
+
+                                <div class="progress intensity-meter">
+                                    <div id="intensity-bar" class="progress-bar" role="progressbar" aria-valuenow="0"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#emotion-details">
+                                    Show Details
+                                </button>
+
+                                <div class="collapse mt-3" id="emotion-details">
+                                    <div class="card card-body">
+                                        <h6>Emotion Analysis Details:</h6>
+                                        <div id="emotion-details-content">
+                                            <!-- Details will be populated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Empathy Engine - Giving AI a Human Voice</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('text-form');
+            const textInput = document.getElementById('text-input');
+            const resultContainer = document.getElementById('result-container');
+            const audioPlayer = document.getElementById('audio-player');
+            const emotionBadge = document.getElementById('emotion-badge');
+            const intensityValue = document.getElementById('intensity-value');
+            const intensityBar = document.getElementById('intensity-bar');
+            const emotionDetailsContent = document.getElementById('emotion-details-content');
+            const submitText = document.getElementById('submit-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const elevenlabsApiContainer = document.getElementById('elevenlabs-api-container');
+            const elevenlabsApiKey = document.getElementById('elevenlabs-api-key');
+
+            // Add event listeners to engine radio buttons to show/hide API key field
+            const engineRadios = document.querySelectorAll('input[name="engine"]');
+            engineRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'elevenlabs') {
+                        elevenlabsApiContainer.style.display = 'block';
+                    } else {
+                        elevenlabsApiContainer.style.display = 'none';
+                    }
+                });
+            });
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const text = textInput.value.trim();
+                if (!text) return;
+
+                // Get selected voice
+                const voiceInputs = document.querySelectorAll('input[name="voice"]');
+                let voice = 'male';
+                for (const input of voiceInputs) {
+                    if (input.checked) {
+                        voice = input.value;
+                        break;
+                    }
+                }
+
+                // Get selected TTS engine
+                const engineInputs = document.querySelectorAll('input[name="engine"]');
+                let engine = 'pyttsx3';
+                for (const input of engineInputs) {
+                    if (input.checked) {
+                        engine = input.value;
+                        break;
+                    }
+                }
+
+                // Set advanced emotion detection to false since we removed the option
+                const useAdvanced = false;
+
+                // Show loading state
+                submitText.textContent = 'Generating...';
+                loadingSpinner.style.display = 'inline-block';
+                resultContainer.style.display = 'none';
+
+                try {
+                    // Create form data for request
+                    const formData = new FormData();
+                    formData.append('text', text);
+                    formData.append('voice', voice);
+                    formData.append('engine', engine);
+                    formData.append('use_advanced', useAdvanced.toString());
+
+                    // Add API key if ElevenLabs is selected
+                    if (engine === 'elevenlabs') {
+                        const apiKey = document.getElementById('elevenlabs-api-key').value.trim();
+                        if (!apiKey) {
+                            alert('Please enter your ElevenLabs API key');
+                            submitText.textContent = 'Generate Empathetic Speech';
+                            loadingSpinner.style.display = 'none';
+                            return;
+                        }
+                        formData.append('api_key', apiKey);
+                    }
+
+                    // Send request
+                    console.log("Sending request to API...");
+                    const response = await fetch('/api/process', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    console.log("Received response:", response);
+                    const data = await response.json();
+                    console.log("Response data:", data);
+
+                    if (data.success) {
+                        // Set audio source
+                        console.log("Setting audio source to:", data.audioUrl);
+                        audioPlayer.src = data.audioUrl;
+                        audioPlayer.load(); // Force reload of audio element
+
+                        // Try to play automatically
+                        try {
+                            const playPromise = audioPlayer.play();
+                            if (playPromise !== undefined) {
+                                playPromise.then(() => {
+                                    console.log("Audio playback started successfully");
+                                }).catch(error => {
+                                    console.log("Audio playback failed:", error);
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error attempting to play audio:", e);
+                        }
+
+                        // Set emotion display
+                        emotionBadge.textContent = data.emotion;
+                        emotionBadge.className = 'emotion-badge emotion-' + data.emotion.toLowerCase();
+
+                        // Set intensity
+                        intensityValue.textContent = data.intensity;
+
+                        // Set intensity bar
+                        let intensityPercentage = 0;
+                        switch (data.intensity) {
+                            case 'low': intensityPercentage = 33; break;
+                            case 'medium': intensityPercentage = 66; break;
+                            case 'high': intensityPercentage = 100; break;
+                        }
+                        intensityBar.style.width = intensityPercentage + '%';
+                        intensityBar.className = 'progress-bar emotion-' + data.emotion.toLowerCase();
+
+                        // Set details content
+                        emotionDetailsContent.innerHTML = '';
+
+                        // Add score
+                        const scoreElement = document.createElement('div');
+                        scoreElement.className = 'emotion-detail-item';
+                        scoreElement.innerHTML = `<strong>Confidence Score:</strong> ${(data.score * 100).toFixed(1)}%`;
+                        emotionDetailsContent.appendChild(scoreElement);
+
+                        // Add other details
+                        if (data.details) {
+                            Object.entries(data.details).forEach(([key, value]) => {
+                                if (typeof value === 'object') {
+                                    const detailHeader = document.createElement('div');
+                                    detailHeader.className = 'emotion-detail-item mt-2';
+                                    detailHeader.innerHTML = `<strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong>`;
+                                    emotionDetailsContent.appendChild(detailHeader);
+
+                                    Object.entries(value).forEach(([subKey, subValue]) => {
+                                        const subDetailElement = document.createElement('div');
+                                        subDetailElement.className = 'emotion-detail-item ms-3';
+                                        subDetailElement.innerHTML = `<em>${subKey}:</em> ${typeof subValue === 'number' ? subValue.toFixed(2) : subValue}`;
+                                        emotionDetailsContent.appendChild(subDetailElement);
+                                    });
+                                } else {
+                                    const detailElement = document.createElement('div');
+                                    detailElement.className = 'emotion-detail-item';
+                                    detailElement.innerHTML = `<strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${typeof value === 'number' ? value.toFixed(2) : value}`;
+                                    emotionDetailsContent.appendChild(detailElement);
+                                }
+                            });
+                        }
+
+                        // Show result
+                        resultContainer.style.display = 'block';
+
+                        // Auto-play audio
+                        audioPlayer.play();
+                    } else {
+                        let errorMsg = data.error || 'Failed to generate speech';
+                        if (errorMsg.includes('API key')) {
+                            errorMsg += '\nPlease check your ElevenLabs API key or try a different TTS engine.';
+                        }
+                        alert('Error: ' + errorMsg);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error: ' + error.message);
+                } finally {
+                    // Reset button state
+                    submitText.textContent = 'Generate Empathetic Speech';
+                    loadingSpinner.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

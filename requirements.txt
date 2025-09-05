@@ -1,0 +1,10 @@
+textblob
+nltk
+pyttsx3
+flask
+transformers
+torch
+gtts
+python-dotenv
+scipy
+numpy
