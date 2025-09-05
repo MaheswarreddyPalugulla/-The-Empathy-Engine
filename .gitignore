@@ -20,7 +20,8 @@ ENV/
 *.swo
 
 # Generated files
-output/
+output/*
+!output/.gitkeep
 *.wav
 *.mp3
 *.aac
