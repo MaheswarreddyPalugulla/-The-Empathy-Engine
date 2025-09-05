@@ -89,35 +89,6 @@ Then open your browser and navigate to `http://127.0.0.1:5000`
 
 ### Emotion Detection
 
-The system uses a two-tiered approach for emotion detection:
-1. Initial sentiment analysis using TextBlob for basic positive/negative classification
-2. Advanced emotion classification using a fine-tuned transformer model to detect more nuanced emotions
-
-### Emotion-to-Voice Mapping Logic
-
-The system maps detected emotions to specific voice parameters:
-
-| Emotion    | Rate    | Pitch   | Volume  | Description                          |
-|------------|---------|---------|---------|--------------------------------------|
-| happy      | +20%    | +15%    | +10%    | Faster, higher pitch, slightly louder|
-| excited    | +30%    | +20%    | +15%    | Even faster and higher               |
-| sad        | -10%    | -15%    | -10%    | Slower, lower pitch, slightly quieter|
-| angry      | +10%    | +5%     | +20%    | Slightly faster, normal pitch, louder|
-| fear       | +15%    | +10%    | -5%     | Faster, higher pitch, quieter        |
-| neutral    | +0%     | +0%     | +0%     | No modification                      |
-| surprise   | +15%    | +20%    | +15%    | Faster, higher pitch, louder         |
-| positive   | +10%    | +10%    | +5%     | Slightly faster and higher           |
-| negative   | -5%     | -5%     | -5%     | Slightly slower, lower, quieter      |
-| concerned  | -5%     | -5%     | +5%     | Slower, lower, slightly louder       |
-
-Additionally, the intensity of the detected emotion (low, medium, high) further scales these modifiers.
-
-## Design Choices
-
-## Design Choices
-
-### Emotion Detection
-
 The Empathy Engine uses a two-tier approach to emotion detection:
 
 1. **Basic Sentiment Analysis**: Using TextBlob for fast, offline processing
