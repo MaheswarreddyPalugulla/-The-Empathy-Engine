@@ -89,6 +89,8 @@ Then open your browser and navigate to `http://127.0.0.1:5000`
 
 ![Empathy Engine Web Interface](https://raw.githubusercontent.com/MaheswarreddyPalugulla/-The-Empathy-Engine/main/screenshots/empathy_engine_ui.png)
 
+<img src="screenshots/empathy_engine_ui.png" alt="Empathy Engine Web Interface" width="800"/>
+
 ### Public Access with Ngrok
 
 To make the application accessible over the internet:
