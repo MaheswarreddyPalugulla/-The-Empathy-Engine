@@ -1,10 +1,10 @@
 # The Empathy Engine 🎙️
 
-A service that dynamically modulates the vocal characteristics of synthesized speech based on the detected emotion of the source text. This project brings an emotional dimension to synthesized speech, making AI-generated voice more human-like and contextually appropriate.
+A service that dynamically modulates the vocal characteristics of synthesized speech based on the detected emotion of the source text. This project bridges the gap between text-based sentiment and expressive, human-like audio output.
 
-## Overview
+## Challenge Objective
 
-The Empathy Engine analyzes input text for emotional content and adapts the voice parameters (pitch, rate, volume) to match the detected emotion, creating more natural and engaging speech synthesis.
+The Empathy Engine was built to address the "uncanny valley" problem in AI-driven voice interactions. While AI can understand and generate text with great accuracy, the voice often sounds robotic and lacks emotional nuance. This project enhances TTS systems by adding prosody, emotional range, and subtle vocal cues that build trust and rapport.
 
 ## Core Features
 
@@ -146,6 +146,26 @@ The Empathy Engine was built with several key design principles in mind:
    - Each emotion has specific parameter adjustments based on human speech patterns
    - Intensity scaling ensures proportional voice changes based on emotional intensity
    - Base parameters are modified by percentage rather than absolute values for consistent results
+
+## Project Structure
+
+The repository is organized as follows:
+
+```
+empathy_engine/
+├── src/                      # Source code
+│   ├── app.py                # Flask web interface
+│   ├── cli.py                # Command line interface
+│   ├── emotion_detector.py   # Emotion detection logic
+│   ├── voice_modulator.py    # Voice parameter modulation
+│   └── empathy_engine.py     # Main integration module
+├── templates/                # HTML templates for web interface
+│   └── index.html            # Main web interface
+├── output/                   # Directory for generated audio files
+├── .env.template             # Template for environment variables
+├── requirements.txt          # Python dependencies
+└── README.md                 # Project documentation
+```
 
 ## Quick Start Guide
 
