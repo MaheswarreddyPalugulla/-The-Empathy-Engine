@@ -8,3 +8,4 @@ gtts
 python-dotenv
 scipy
 numpy
+pyngrok
