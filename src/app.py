@@ -117,8 +117,12 @@ def process_text():
                 # Fall back to basic settings
                 engine = EmpathyEngine(use_advanced_emotion=False, tts_engine='pyttsx3')
         
-        # Set voice
-        engine.set_voice(voice)
+        # Set voice - ensure this is successful before continuing
+        if not engine.set_voice(voice):
+            logger.warning(f"Failed to set voice to {voice}, using default voice instead")
+            
+        # Log voice setting for debugging
+        logger.info(f"Using voice gender: {voice} with TTS engine: {tts_engine}")
         
         # Generate unique filename with proper path joining
         timestamp = int(time.time())
@@ -133,6 +137,7 @@ def process_text():
             if use_advanced:
                 logger.info("Retrying with basic emotion detection")
                 engine = EmpathyEngine(use_advanced_emotion=False, tts_engine=tts_engine)
+                # Try setting the voice again
                 engine.set_voice(voice)
                 audio_file, emotion_result = engine.process(text, output_file)
             else:
