@@ -1,6 +1,11 @@
 # The Empathy Engine 🎙️
 
-A service that dynamically modulates the vocal characteristics of synthesized speech based on the detected emotion of the source text. This project bridges the gap between text-based sentiment and expressive, human-like audio output.
+<div align="center">
+  <img src="static/images/empathy_engine_logo.png" alt="Empathy Engine Logo" width="300px">
+  <p>A service that dynamically modulates the vocal characteristics of synthesized speech based on the detected emotion of the source text.</p>
+</div>
+
+This project bridges the gap between text-based sentiment and expressive, human-like audio output by intelligently mapping emotions to voice parameters.
 
 ## Project Description
 
@@ -84,6 +89,21 @@ python src/cli.py --text "I am so excited about this new technology!" --output "
 python src/app.py
 ```
 Then open your browser and navigate to `http://127.0.0.1:5000`
+
+<div align="center">
+  <img src="static/images/empathy_engine_ui.png" alt="Empathy Engine Web Interface" width="600px">
+  <p><em>The Empathy Engine Web Interface</em></p>
+</div>
+
+### Public Access with Ngrok
+
+To make the application accessible over the internet:
+
+```bash
+python src/start_public_server.py
+```
+
+This will create a public URL that anyone can use to access your Empathy Engine. The URL will be displayed in the console output.
 
 ## Design Choices
 
