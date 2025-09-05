@@ -1,6 +1,7 @@
 # The Empathy Engine 🎙️
 
 <div align="center">
+  <img src="https://github.com/MaheswarreddyPalugulla/-The-Empathy-Engine/assets/155593576/34e06ea5-ea50-4be9-a013-c0e8e55ad858" alt="Empathy Engine" width="700px">
   <p>A service that dynamically modulates the vocal characteristics of synthesized speech based on the detected emotion of the source text.</p>
 </div>
 
@@ -90,7 +91,7 @@ python src/app.py
 Then open your browser and navigate to `http://127.0.0.1:5000`
 
 <div align="center">
-  <img src="screenshots/empathy_engine_ui.png" alt="Empathy Engine Web Interface" width="800px">
+  <img src="https://github.com/MaheswarreddyPalugulla/-The-Empathy-Engine/assets/155593576/34e06ea5-ea50-4be9-a013-c0e8e55ad858" alt="Empathy Engine Web Interface" width="800px">
   <p><em>The Empathy Engine Web Interface</em></p>
 </div>
 
